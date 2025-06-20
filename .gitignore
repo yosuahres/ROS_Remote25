@@ -1,4 +1,36 @@
-.vscode
-.build
-.install
-.log
+# === ROS 2 colcon build artifacts ===
+
+# Build, install, and log directories
+build/
+install/
+log/
+
+# Colcon metadata
+.colcon/
+.colcon_install_layout
+
+# ROS 2 setup scripts
+local_setup.*
+setup.*
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Editor/IDE files
+.vscode/
+.idea/
+
+# CMake and build system files
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+
+# Misc
+*.swp
+*.swo
+*.bak
+*~
