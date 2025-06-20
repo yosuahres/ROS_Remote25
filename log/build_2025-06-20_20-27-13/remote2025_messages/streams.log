@@ -1,0 +1,56 @@
+[0.010s] Invoking command in '/home/rivalits/Documents/res/erc_remote/build/remote2025_messages': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --build /home/rivalits/Documents/res/erc_remote/build/remote2025_messages -- -j12 -l12
+[0.052s] [  3%] [34m[1mGenerating C code for ROS interfaces[0m
+[0.065s] [  6%] [34m[1mGenerating C++ code for ROS interfaces[0m
+[0.076s] [  6%] Built target ament_cmake_python_copy_remote2025_messages
+[0.298s] [  9%] [32mBuilding C object CMakeFiles/detect_messages__rosidl_generator_c.dir/rosidl_generator_c/remote2025_messages/msg/detail/read_led__functions.c.o[0m
+[0.345s] [ 12%] [32m[1mLinking C shared library libdetect_messages__rosidl_generator_c.so[0m
+[0.394s] [ 12%] Built target detect_messages__cpp
+[0.395s] [ 12%] Built target detect_messages__rosidl_generator_c
+[0.407s] [ 16%] [34m[1mGenerating C++ introspection for ROS interfaces[0m
+[0.411s] [ 19%] [34m[1mGenerating C++ type support dispatch for ROS interfaces[0m
+[0.412s] [ 22%] [34m[1mGenerating C++ type support for eProsima Fast-RTPS[0m
+[0.511s] running egg_info
+[0.513s] creating remote2025_messages.egg-info
+[0.513s] writing remote2025_messages.egg-info/PKG-INFO
+[0.513s] writing dependency_links to remote2025_messages.egg-info/dependency_links.txt
+[0.513s] writing top-level names to remote2025_messages.egg-info/top_level.txt
+[0.514s] writing manifest file 'remote2025_messages.egg-info/SOURCES.txt'
+[0.517s] reading manifest file 'remote2025_messages.egg-info/SOURCES.txt'
+[0.518s] writing manifest file 'remote2025_messages.egg-info/SOURCES.txt'
+[0.559s] [ 22%] Built target ament_cmake_python_build_remote2025_messages_egg
+[0.573s] [ 32%] [34m[1mGenerating C introspection for ROS interfaces[0m
+[0.573s] [ 32%] [34m[1mGenerating C type support dispatch for ROS interfaces[0m
+[0.573s] [ 32%] [34m[1mGenerating C type support for eProsima Fast-RTPS[0m
+[0.626s] [ 35%] [32mBuilding CXX object CMakeFiles/detect_messages__rosidl_typesupport_cpp.dir/rosidl_typesupport_cpp/remote2025_messages/msg/read_led__type_support.cpp.o[0m
+[0.715s] [ 38%] [32mBuilding CXX object CMakeFiles/detect_messages__rosidl_typesupport_fastrtps_cpp.dir/rosidl_typesupport_fastrtps_cpp/remote2025_messages/msg/detail/dds_fastrtps/read_led__type_support.cpp.o[0m
+[0.756s] [ 41%] [32mBuilding CXX object CMakeFiles/detect_messages__rosidl_typesupport_introspection_cpp.dir/rosidl_typesupport_introspection_cpp/remote2025_messages/msg/detail/read_led__type_support.cpp.o[0m
+[0.807s] [ 45%] [32mBuilding CXX object CMakeFiles/detect_messages__rosidl_typesupport_c.dir/rosidl_typesupport_c/remote2025_messages/msg/read_led__type_support.cpp.o[0m
+[0.818s] [ 48%] [32mBuilding C object CMakeFiles/detect_messages__rosidl_typesupport_introspection_c.dir/rosidl_typesupport_introspection_c/remote2025_messages/msg/detail/read_led__type_support.c.o[0m
+[0.851s] [ 51%] [32m[1mLinking CXX shared library libdetect_messages__rosidl_typesupport_c.so[0m
+[0.851s] [ 54%] [32m[1mLinking C shared library libdetect_messages__rosidl_typesupport_introspection_c.so[0m
+[0.889s] [ 54%] Built target detect_messages__rosidl_typesupport_c
+[0.892s] [ 54%] Built target detect_messages__rosidl_typesupport_introspection_c
+[0.908s] [ 58%] [32mBuilding CXX object CMakeFiles/detect_messages__rosidl_typesupport_fastrtps_c.dir/rosidl_typesupport_fastrtps_c/remote2025_messages/msg/detail/read_led__type_support_c.cpp.o[0m
+[0.994s] [ 61%] [32m[1mLinking CXX shared library libdetect_messages__rosidl_typesupport_cpp.so[0m
+[1.042s] [ 61%] Built target detect_messages__rosidl_typesupport_cpp
+[1.168s] [ 64%] [32m[1mLinking CXX shared library libdetect_messages__rosidl_typesupport_fastrtps_c.so[0m
+[1.207s] [ 67%] [32m[1mLinking CXX shared library libdetect_messages__rosidl_typesupport_fastrtps_cpp.so[0m
+[1.269s] [ 67%] Built target detect_messages__rosidl_typesupport_fastrtps_c
+[1.280s] [ 70%] [32m[1mLinking CXX shared library libdetect_messages__rosidl_typesupport_introspection_cpp.so[0m
+[1.283s] [ 70%] Built target detect_messages__rosidl_typesupport_fastrtps_cpp
+[1.315s] [ 70%] Built target detect_messages__rosidl_typesupport_introspection_cpp
+[1.337s] [ 70%] Built target detect_messages
+[1.355s] [ 74%] [34m[1mGenerating Python code for ROS interfaces[0m
+[1.548s] [ 74%] Built target detect_messages__py
+[1.565s] [ 77%] [32mBuilding C object CMakeFiles/detect_messages__rosidl_generator_py.dir/rosidl_generator_py/remote2025_messages/msg/_read_led_s.c.o[0m
+[1.645s] [ 80%] [32m[1mLinking C shared library rosidl_generator_py/remote2025_messages/libdetect_messages__rosidl_generator_py.so[0m
+[1.676s] [ 80%] Built target detect_messages__rosidl_generator_py
+[1.697s] [ 83%] [32mBuilding C object CMakeFiles/remote2025_messages__rosidl_typesupport_introspection_c__pyext.dir/rosidl_generator_py/remote2025_messages/_remote2025_messages_s.ep.rosidl_typesupport_introspection_c.c.o[0m
+[1.697s] [ 90%] [32mBuilding C object CMakeFiles/remote2025_messages__rosidl_typesupport_fastrtps_c__pyext.dir/rosidl_generator_py/remote2025_messages/_remote2025_messages_s.ep.rosidl_typesupport_fastrtps_c.c.o[0m
+[1.697s] [ 90%] [32mBuilding C object CMakeFiles/remote2025_messages__rosidl_typesupport_c__pyext.dir/rosidl_generator_py/remote2025_messages/_remote2025_messages_s.ep.rosidl_typesupport_c.c.o[0m
+[1.775s] [ 93%] [32m[1mLinking C shared library rosidl_generator_py/remote2025_messages/remote2025_messages_s__rosidl_typesupport_c.cpython-310-x86_64-linux-gnu.so[0m
+[1.775s] [ 96%] [32m[1mLinking C shared library rosidl_generator_py/remote2025_messages/remote2025_messages_s__rosidl_typesupport_fastrtps_c.cpython-310-x86_64-linux-gnu.so[0m
+[1.798s] [100%] [32m[1mLinking C shared library rosidl_generator_py/remote2025_messages/remote2025_messages_s__rosidl_typesupport_introspection_c.cpython-310-x86_64-linux-gnu.so[0m
+[1.812s] [100%] Built target remote2025_messages__rosidl_typesupport_fastrtps_c__pyext
+[1.815s] [100%] Built target remote2025_messages__rosidl_typesupport_c__pyext
+[1.839s] [100%] Built target remote2025_messages__rosidl_typesupport_introspection_c__pyext

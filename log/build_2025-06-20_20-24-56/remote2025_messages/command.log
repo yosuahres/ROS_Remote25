@@ -1,0 +1,1 @@
+Invoking command in '/home/rivalits/Documents/res/erc_remote/build/remote2025_messages': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake /home/rivalits/Documents/res/erc_remote/src/remote2025_messages -DCMAKE_INSTALL_PREFIX=/home/rivalits/Documents/res/erc_remote/install/remote2025_messages

@@ -1,0 +1,32 @@
+[0.009s] Invoking command in '/home/rivalits/Documents/res/erc_remote/build/remote2025_camera': /usr/bin/cmake /home/rivalits/Documents/res/erc_remote/src/remote2025_camera -DCMAKE_INSTALL_PREFIX=/home/rivalits/Documents/res/erc_remote/install/remote2025_camera
+[0.024s] -- Found ament_cmake: 1.3.11 (/opt/ros/humble/share/ament_cmake/cmake)
+[0.119s] -- Found ament_lint_auto: 0.12.12 (/opt/ros/humble/share/ament_lint_auto/cmake)
+[0.155s] Error parsing '/home/rivalits/Documents/res/erc_remote/src/remote2025_camera/package.xml':
+[0.180s] Traceback (most recent call last):
+[0.180s]   File "/opt/ros/humble/share/ament_cmake_core/cmake/core/package_xml_2_cmake.py", line 150, in <module>
+[0.180s]     main()
+[0.180s]   File "/opt/ros/humble/share/ament_cmake_core/cmake/core/package_xml_2_cmake.py", line 53, in main
+[0.180s]     raise e
+[0.180s]   File "/opt/ros/humble/share/ament_cmake_core/cmake/core/package_xml_2_cmake.py", line 49, in main
+[0.181s]     package = parse_package_string(
+[0.181s]   File "/usr/lib/python3/dist-packages/catkin_pkg/package.py", line 788, in parse_package_string
+[0.181s]     pkg.validate(warnings=warnings)
+[0.181s]   File "/usr/lib/python3/dist-packages/catkin_pkg/package.py", line 330, in validate
+[0.181s]     raise InvalidPackage('\n'.join(errors), self.filename)
+[0.181s] catkin_pkg.package.InvalidPackage: Error(s) in package '/home/rivalits/Documents/res/erc_remote/src/remote2025_camera/package.xml':
+[0.181s] Invalid email "rivalits@rival" for person "rivalits"
+[0.189s] [31mCMake Error at /opt/ros/humble/share/ament_cmake_core/cmake/core/ament_package_xml.cmake:95 (message):
+[0.189s]   execute_process(/usr/bin/python3
+[0.189s]   /opt/ros/humble/share/ament_cmake_core/cmake/core/package_xml_2_cmake.py
+[0.189s]   /home/rivalits/Documents/res/erc_remote/src/remote2025_camera/package.xml
+[0.189s]   /home/rivalits/Documents/res/erc_remote/build/remote2025_camera/ament_cmake_core/package.cmake)
+[0.189s]   returned error code 1
+[0.189s] Call Stack (most recent call first):
+[0.189s]   /opt/ros/humble/share/ament_cmake_core/cmake/core/ament_package_xml.cmake:49 (_ament_package_xml)
+[0.189s]   /opt/ros/humble/share/ament_lint_auto/cmake/ament_lint_auto_find_test_dependencies.cmake:31 (ament_package_xml)
+[0.190s]   CMakeLists.txt:32 (ament_lint_auto_find_test_dependencies)
+[0.190s] 
+[0.190s] [0m
+[0.190s] -- Configuring incomplete, errors occurred!
+[0.190s] See also "/home/rivalits/Documents/res/erc_remote/build/remote2025_camera/CMakeFiles/CMakeOutput.log".
+[0.191s] Invoked command in '/home/rivalits/Documents/res/erc_remote/build/remote2025_camera' returned '1': /usr/bin/cmake /home/rivalits/Documents/res/erc_remote/src/remote2025_camera -DCMAKE_INSTALL_PREFIX=/home/rivalits/Documents/res/erc_remote/install/remote2025_camera

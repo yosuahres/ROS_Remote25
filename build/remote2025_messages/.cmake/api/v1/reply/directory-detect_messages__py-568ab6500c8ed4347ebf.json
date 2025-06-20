@@ -1,0 +1,14 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : [],
+		"nodes" : []
+	},
+	"installers" : [],
+	"paths" : 
+	{
+		"build" : "detect_messages__py",
+		"source" : "/home/rivalits/Documents/res/erc_remote/build/remote2025_messages/detect_messages__py"
+	}
+}

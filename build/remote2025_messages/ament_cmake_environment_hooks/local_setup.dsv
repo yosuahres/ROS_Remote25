@@ -1,0 +1,4 @@
+source;share/remote2025_messages/environment/ament_prefix_path.sh
+source;share/remote2025_messages/environment/library_path.sh
+source;share/remote2025_messages/environment/path.sh
+source;share/remote2025_messages/environment/pythonpath.sh

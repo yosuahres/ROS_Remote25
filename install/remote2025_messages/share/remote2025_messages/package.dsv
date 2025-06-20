@@ -1,0 +1,11 @@
+source;share/remote2025_messages/hook/cmake_prefix_path.ps1
+source;share/remote2025_messages/hook/cmake_prefix_path.dsv
+source;share/remote2025_messages/hook/cmake_prefix_path.sh
+source;share/remote2025_messages/hook/ld_library_path_lib.ps1
+source;share/remote2025_messages/hook/ld_library_path_lib.dsv
+source;share/remote2025_messages/hook/ld_library_path_lib.sh
+source;share/remote2025_messages/local_setup.bash
+source;share/remote2025_messages/local_setup.dsv
+source;share/remote2025_messages/local_setup.ps1
+source;share/remote2025_messages/local_setup.sh
+source;share/remote2025_messages/local_setup.zsh
