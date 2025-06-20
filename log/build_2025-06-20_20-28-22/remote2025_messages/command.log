@@ -1,3 +1,0 @@
-Invoking command in '/home/rivalits/Documents/res/erc_remote/build/remote2025_messages': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --build /home/rivalits/Documents/res/erc_remote/build/remote2025_messages -- -j12 -l12
-Invoked command in '/home/rivalits/Documents/res/erc_remote/build/remote2025_messages' returned '0': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --build /home/rivalits/Documents/res/erc_remote/build/remote2025_messages -- -j12 -l12
-Invoking command in '/home/rivalits/Documents/res/erc_remote/build/remote2025_messages': CMAKE_PREFIX_PATH=/opt/ros/humble /usr/bin/cmake --install /home/rivalits/Documents/res/erc_remote/build/remote2025_messages

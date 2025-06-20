@@ -1,2 +1,0 @@
-Invoking command in '/home/rivalits/Documents/res/erc_remote/build/remote2025_camera': /usr/bin/cmake /home/rivalits/Documents/res/erc_remote/src/remote2025_camera -DCMAKE_INSTALL_PREFIX=/home/rivalits/Documents/res/erc_remote/install/remote2025_camera
-Invoked command in '/home/rivalits/Documents/res/erc_remote/build/remote2025_camera' returned '1': /usr/bin/cmake /home/rivalits/Documents/res/erc_remote/src/remote2025_camera -DCMAKE_INSTALL_PREFIX=/home/rivalits/Documents/res/erc_remote/install/remote2025_camera
