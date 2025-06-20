@@ -25,9 +25,9 @@ public:
   ov::CompiledModel compiled_model;
   ov::InferRequest infer_request;
   struct Detection{
-        int class_id;
-        float confidence;
-        Rect box;
+      int class_id;
+      float confidence;
+      Rect box;
     };
 
   struct Resize{
@@ -50,7 +50,7 @@ public:
     Core core;
     
     //read the model
-    shared_ptr<Model> model = core.read_model("/home/rivalits/Documents/res/erc_remote/src/remote2025_camera/include/openvino_model/kontol.onnx");
+    shared_ptr<Model> model = core.read_model("/home/rivalits/Documents/res/erc_remote/src/remote2025_camera/include/openvino_model/fix.onnx");
 
     preprocess::PrePostProcessor ppp = preprocess::PrePostProcessor(model);
     ppp.input().tensor().set_element_type(element::u8).set_layout("NHWC").set_color_format(preprocess::ColorFormat::BGR);
@@ -66,9 +66,14 @@ private:
   std::shared_ptr<image_transport::ImageTransport> it_;
   image_transport::Subscriber img_sub_;
 
+  //read password
+  std::string password;
+  int last_id = -1;
+
   Resize resize_and_pad(Mat& img,Size new_shape){
         float width = img.cols;
         float height = img.rows;
+
         float r = (float)(new_shape.width/max(width,height));
         int new_unpadW = int(round(width*r));
         int new_unpadH = int(round(height*r));
@@ -87,25 +92,35 @@ private:
     try {
       // Konversi dari ROS Image ke OpenCV Mat
       Resize res;
+      
       img = cv_bridge::toCvCopy(msg, "bgr8")->image;
 
       res = resize_and_pad(img,Size(640,640));
+
       auto start_time = chrono::high_resolution_clock::now();
       cv::waitKey(10);
+      
       float *input_data = (float*) res.resized_image.data;
-        Tensor input_tensor = Tensor(compiled_model.input().get_element_type(), compiled_model.input().get_shape(), input_data);
+        
+      Tensor input_tensor = Tensor(compiled_model.input().get_element_type(), compiled_model.input().get_shape(), input_data);
+        
         infer_request.set_input_tensor(input_tensor);
         infer_request.infer();
+        
         const Tensor &output_tensor = infer_request.get_output_tensor();
         Shape output_shape = output_tensor.get_shape();
+        
         float *detections = output_tensor.data<float>();
+        
         vector<cv::Rect> boxes;
         vector<int> class_ids;
         vector<float> confidences;
+
         for (size_t i = 0; i < output_shape[1]; i++){
             float *detection = &detections[i * output_shape[2]];
 
             float confidence = detection[4];
+      
             if (confidence >= CONFIDENCE_THRESHOLD){
                 float *classes_scores = &detection[5];
                 cv::Mat scores(1, output_shape[2] - 5, CV_32FC1, classes_scores);
@@ -131,9 +146,13 @@ private:
                 }
             }
         }
+      
         std::vector<int> nms_result;
+      
         cv::dnn::NMSBoxes(boxes, confidences, SCORE_THRESHOLD, NMS_THRESHOLD, nms_result);
+      
         std::vector<Detection> output;
+      
         for (size_t i = 0; i < nms_result.size(); i++)
         {
             Detection result;
@@ -143,42 +162,106 @@ private:
             result.box = boxes[idx];
             output.push_back(result);
         }
-        for (size_t i = 0; i < output.size(); i++)
+      
+        int width = img.cols;
+        int height = img.rows;
+        int mid_x = width / 2;
+        int mid_y = height / 2;
+        
+        std::vector<Detection> q1, q2, q3, q4;
+
+        for(const auto &detection : output) {
+            // Get center of bounding box
+            int cx = detection.box.x + detection.box.width / 2;
+            int cy = detection.box.y + detection.box.height / 2;
+
+            if (cx >= mid_x && cy < mid_y) {
+                q1.push_back(detection); // Right-Top
+            } else if (cx < mid_x && cy < mid_y) {
+                q2.push_back(detection); // Left-Top
+            } else if (cx < mid_x && cy >= mid_y) {
+                q3.push_back(detection); // Bottom-Left
+            } else if (cx >= mid_x && cy >= mid_y) {
+                q4.push_back(detection); // Bottom-Right
+            }
+        }
+
+        std::vector<Detection> sorted_output;
+        ordered.insert(ordered.end(), q1.begin(), q1.end());
+        ordered.insert(ordered.end(), q2.begin(), q2.end());
+        ordered.insert(ordered.end(), q3.begin(), q3.end());
+        ordered.insert(ordered.end(), q4.begin(), q4.end());
+
+        for (size_t i = 0; i < sorted_output.size(); i++)
         {
-            auto detection = output[i];
+            auto detection = sorted_output[i];
             auto box = detection.box;
             auto classId = detection.class_id;
             auto confidence = detection.confidence;
+
+
+            if (classId != last_id) {
+              char detected_char;
+
+              if(classId >= 0 && classId <26)
+                detected_char = 'A' + classId; 
+              else if(classId >= 26 && classId < 36)
+                detected_char = '0' + (classId - 26);
+              else
+                detected_char = '?'; 
+
+              password += detected_char;
+              last_id = classId;
+
+              RCLCPP_INFO(this->get_logger(), "Password so far: %s", password.c_str());
+            }
+
+            if (output.empty()) {
+              last_id = -1; // Reset last_id if no detections
+              RCLCPP_INFO(this->get_logger(), "No detections found.");
+            }
+      
             float rx = (float)img.cols / (float)(res.resized_image.cols - res.dw);
             float ry = (float)img.rows / (float)(res.resized_image.rows - res.dh);
+      
             box.x = rx * box.x;
             box.y = ry * box.y;
             box.width = rx * box.width;
             box.height = ry * box.height;
-            cout << "Bbox" << i + 1 << ": Class: " << classId << " "
-                << "Confidence: " << confidence << " Scaled coords: [ "
-                << "cx: " << (float)(box.x + (box.width / 2)) / img.cols << ", "
-                << "cy: " << (float)(box.y + (box.height / 2)) / img.rows << ", "
-                << "w: " << (float)box.width / img.cols << ", "
-                << "h: " << (float)box.height / img.rows << " ]" << endl;
+      
+            // cout << "Bbox" << i + 1 << ": Class: " << classId << " "
+            //     << "Confidence: " << confidence << " Scaled coords: [ "
+            //     << "cx: " << (float)(box.x + (box.width / 2)) / img.cols << ", "
+            //     << "cy: " << (float)(box.y + (box.height / 2)) / img.rows << ", "
+            //     << "w: " << (float)box.width / img.cols << ", "
+            //     << "h: " << (float)box.height / img.rows << " ]" << endl;
+      
             float xmax = box.x + box.width;
             float ymax = box.y + box.height;
+      
             // info_obj.center_x = (float)(box.x + (box.width / 2)) / img.cols;
             // info_obj.center_y = (float)(box.y + (box.height / 2)) / img.rows;
+      
             cv::rectangle(img, cv::Point(box.x, box.y), cv::Point(xmax, ymax), cv::Scalar(0, 255, 0), 3);
             cv::rectangle(img, cv::Point(box.x, box.y - 20), cv::Point(xmax, box.y), cv::Scalar(0, 255, 0), cv::FILLED);
             cv::putText(img, std::to_string(classId), cv::Point(box.x, box.y - 5), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(0, 0, 0));
         }
+      
         auto end_time = std::chrono::high_resolution_clock::now();
         chrono::duration<double> elapsed = end_time - start_time;
-        fps = 1.0 / elapsed.count(); // Accurate frame rate calculation
+        fps = 1.0 / elapsed.count(); 
+      
         RCLCPP_INFO(this->get_logger(), "FPS: %.2f", fps);
         putText(img, "FPS:" + to_string(fps),cv::Point(10,30),cv::FONT_HERSHEY_SIMPLEX,1.0,cv::Scalar(0,0,0),2);
+      
         RCLCPP_INFO(this->get_logger(), "FPS: %f", fps);
         // obj_pub->publish(this->info_obj);
+      
         imshow("Detection Result_2", img);
         cv::waitKey(1); // Wajib untuk memproses event GUI OpenCV
+
     } catch (const cv_bridge::Exception &e) {
+      
       RCLCPP_ERROR(this->get_logger(), "cv_bridge exception: %s", e.what());
     }
   }
