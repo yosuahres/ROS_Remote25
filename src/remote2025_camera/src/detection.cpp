@@ -19,7 +19,7 @@ using namespace std;
 
 const float SCORE_THRESHOLD = 0.2;
 const float NMS_THRESHOLD = 0.4;
-const float CONFIDENCE_THRESHOLD = 0.5;
+const float CONFIDENCE_THRESHOLD = 0.2;
 
 class ImageSubscriberNode : public rclcpp::Node {
 public:
@@ -51,8 +51,8 @@ public:
     img_sub_ = it_->subscribe("topic2",5,std::bind(&ImageSubscriberNode::image_callback, this, std::placeholders::_1));
     Core core;
     
-    //read the model
-    shared_ptr<Model> model = core.read_model("/home/rivalits/Documents/res/erc_remote/src/remote2025_camera/include/openvino_model/fix.onnx");
+    //read model
+    shared_ptr<Model> model = core.read_model("/home/rivalits/Documents/res/erc_remote/src/remote2025_camera/include/openvino_model/BISADONGPLEASE.onnx");
 
     preprocess::PrePostProcessor ppp = preprocess::PrePostProcessor(model);
     ppp.input().tensor().set_element_type(element::u8).set_layout("NHWC").set_color_format(preprocess::ColorFormat::BGR);
@@ -208,18 +208,51 @@ private:
             if (classId != last_id) {
               char detected_char;
 
-              if(classId >= 0 && classId <26)
-                detected_char = 'A' + classId; 
-              else if(classId >= 26 && classId < 36)
-                detected_char = '0' + (classId - 26);
+              if(classId>=0 && classId<10)
+                detected_char = '0' + classId; // Class 0-9 maps to '0'-'9'
+              else if(classId >= 10 && classId < 36)
+                detected_char = 'A' + (classId - 10); // Class 10-35 maps to 'A'-'Z'
               else
-                detected_char = '?'; 
+                detected_char = '?'; // Unknown class
+              // if(classId >= 0 && classId <26)
+              //   detected_char = 'A' + classId; 
+              // else if(classId >= 26 && classId < 36)
+              //   detected_char = '0' + (classId - 26);
+              // else
+              //   detected_char = '?'; 
 
               password += detected_char;
               last_id = classId;
 
-              RCLCPP_INFO(this->get_logger(), "Password so far: %s", password.c_str());
+              // RCLCPP_INFO(this->get_logger(), "Password so far: %s", password.c_str());
+              RCLCPP_INFO(this->get_logger(), "Detected Class ID: %d, Character: %c", classId, detected_char);
+
+              std::string detected_char_str(1, detected_char); // Convert char to string
+              cv::putText(img, "Detected: " + detected_char_str, cv::Point(10, 60), 
+                          cv::FONT_HERSHEY_SIMPLEX, 1.0, cv::Scalar(0, 255, 0), 2);
             }
+
+          //   if (classId != last_id) {
+          //     char detected_char;
+          
+          //     // Adjusted mapping logic
+          //     if (classId == 0) {
+          //         detected_char = '0'; // Class 0 maps to '0'
+          //     } else if (classId == 1) {
+          //         detected_char = 'A'; // Class 1 maps to 'A'
+          //     } else if (classId == 2) {
+          //         detected_char = 'B'; // Class 2 maps to 'B'
+          //     } else if (classId == 3) {
+          //         detected_char = '?'; // Class 3 maps to 'BUKAN', represented as '?'
+          //     } else {
+          //         detected_char = '?'; // Default for unknown classes
+          //     }
+          
+          //     password += detected_char;
+          //     last_id = classId;
+          
+          //     RCLCPP_INFO(this->get_logger(), "Password so far: %s", password.c_str());
+          // }
 
             if (output.empty()) {
               last_id = -1; // Reset last_id if no detections
@@ -259,7 +292,7 @@ private:
         // RCLCPP_INFO(this->get_logger(), "FPS: %.2f", fps);
         putText(img, "FPS:" + to_string(fps),cv::Point(10,30),cv::FONT_HERSHEY_SIMPLEX,1.0,cv::Scalar(0,0,0),2);
       
-        RCLCPP_INFO(this->get_logger(), "FPS: %f", fps);
+        // RCLCPP_INFO(this->get_logger(), "FPS: %f", fps);
         // obj_pub->publish(this->info_obj);
       
         imshow("Detection Result_2", img);
