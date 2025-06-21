@@ -10,7 +10,8 @@
 #include <functional>
 #include <memory>
 #include <string>
-#include <stream>
+#include <iostream>
+#include <fstream>
 
 using namespace ov;
 using namespace cv;
@@ -190,10 +191,10 @@ private:
 
         //read in order
         std::vector<Detection> sorted_output;
-        ordered.insert(ordered.end(), q1.begin(), q1.end());
-        ordered.insert(ordered.end(), q2.begin(), q2.end());
-        ordered.insert(ordered.end(), q3.begin(), q3.end());
-        ordered.insert(ordered.end(), q4.begin(), q4.end());
+        sorted_output.insert(sorted_output.end(), q1.begin(), q1.end());
+        sorted_output.insert(sorted_output.end(), q2.begin(), q2.end());
+        sorted_output.insert(sorted_output.end(), q3.begin(), q3.end());
+        sorted_output.insert(sorted_output.end(), q4.begin(), q4.end());
 
         //read password
         for (size_t i = 0; i < sorted_output.size(); i++)
@@ -201,7 +202,7 @@ private:
             auto detection = sorted_output[i];
             auto box = detection.box;
             auto classId = detection.class_id;
-            auto confidence = detection.confidence;
+            // auto confidence = detection.confidence;
 
 
             if (classId != last_id) {
@@ -255,7 +256,7 @@ private:
         chrono::duration<double> elapsed = end_time - start_time;
         fps = 1.0 / elapsed.count(); 
       
-        RCLCPP_INFO(this->get_logger(), "FPS: %.2f", fps);
+        // RCLCPP_INFO(this->get_logger(), "FPS: %.2f", fps);
         putText(img, "FPS:" + to_string(fps),cv::Point(10,30),cv::FONT_HERSHEY_SIMPLEX,1.0,cv::Scalar(0,0,0),2);
       
         RCLCPP_INFO(this->get_logger(), "FPS: %f", fps);
@@ -264,6 +265,7 @@ private:
         imshow("Detection Result_2", img);
         cv::waitKey(1); // Wajib untuk memproses event GUI OpenCV
 
+        int key = cv::waitKey(1);
         if (key == 'q' || key == 'Q') {
           std::ofstream outfile("pass_result.txt");
           if(outfile.is_open()) {
