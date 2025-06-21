@@ -10,6 +10,7 @@
 #include <functional>
 #include <memory>
 #include <string>
+#include <stream>
 
 using namespace ov;
 using namespace cv;
@@ -89,6 +90,7 @@ private:
     }
 
   void image_callback(const sensor_msgs::msg::Image::ConstSharedPtr &msg) {
+
     try {
       // Konversi dari ROS Image ke OpenCV Mat
       Resize res;
@@ -151,7 +153,7 @@ private:
       
         cv::dnn::NMSBoxes(boxes, confidences, SCORE_THRESHOLD, NMS_THRESHOLD, nms_result);
       
-        std::vector<Detection> output;
+        std::vector<Detection> output; 
       
         for (size_t i = 0; i < nms_result.size(); i++)
         {
@@ -171,7 +173,7 @@ private:
         std::vector<Detection> q1, q2, q3, q4;
 
         for(const auto &detection : output) {
-            // Get center of bounding box
+            // get center
             int cx = detection.box.x + detection.box.width / 2;
             int cy = detection.box.y + detection.box.height / 2;
 
@@ -186,12 +188,14 @@ private:
             }
         }
 
+        //read in order
         std::vector<Detection> sorted_output;
         ordered.insert(ordered.end(), q1.begin(), q1.end());
         ordered.insert(ordered.end(), q2.begin(), q2.end());
         ordered.insert(ordered.end(), q3.begin(), q3.end());
         ordered.insert(ordered.end(), q4.begin(), q4.end());
 
+        //read password
         for (size_t i = 0; i < sorted_output.size(); i++)
         {
             auto detection = sorted_output[i];
@@ -259,6 +263,17 @@ private:
       
         imshow("Detection Result_2", img);
         cv::waitKey(1); // Wajib untuk memproses event GUI OpenCV
+
+        if (key == 'q' || key == 'Q') {
+          std::ofstream outfile("pass_result.txt");
+          if(outfile.is_open()) {
+            outfile << password << std::endl;
+            outfile.close();
+            RCLCPP_INFO(this->get_logger(), "Password saved to pass_result.txt: %s", password.c_str());
+          } else {
+            RCLCPP_ERROR(this->get_logger(), "Failed to open pass_result.txt for writing.");           
+          }
+        }
 
     } catch (const cv_bridge::Exception &e) {
       
