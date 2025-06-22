@@ -205,31 +205,21 @@ private:
             // auto confidence = detection.confidence;
 
 
+            char detected_char;
+
+            if(classId>=0 && classId<10)
+              detected_char = '0' + classId; // Class 0-9 maps to '0'-'9'
+            else if(classId >= 10 && classId < 36)
+              detected_char = 'A' + (classId - 10); // Class 10-35 maps to 'A'-'Z'
+            else
+              detected_char = '?'; // Unknown class
+
             if (classId != last_id) {
-              char detected_char;
-
-              if(classId>=0 && classId<10)
-                detected_char = '0' + classId; // Class 0-9 maps to '0'-'9'
-              else if(classId >= 10 && classId < 36)
-                detected_char = 'A' + (classId - 10); // Class 10-35 maps to 'A'-'Z'
-              else
-                detected_char = '?'; // Unknown class
-              // if(classId >= 0 && classId <26)
-              //   detected_char = 'A' + classId; 
-              // else if(classId >= 26 && classId < 36)
-              //   detected_char = '0' + (classId - 26);
-              // else
-              //   detected_char = '?'; 
-
               password += detected_char;
               last_id = classId;
 
               // RCLCPP_INFO(this->get_logger(), "Password so far: %s", password.c_str());
               RCLCPP_INFO(this->get_logger(), "Detected Class ID: %d, Character: %c", classId, detected_char);
-
-              std::string detected_char_str(1, detected_char); // Convert char to string
-              cv::putText(img, "Detected: " + detected_char_str, cv::Point(10, 60), 
-                          cv::FONT_HERSHEY_SIMPLEX, 1.0, cv::Scalar(0, 255, 0), 2);
             }
 
           //   if (classId != last_id) {
@@ -282,7 +272,13 @@ private:
       
             cv::rectangle(img, cv::Point(box.x, box.y), cv::Point(xmax, ymax), cv::Scalar(0, 255, 0), 3);
             cv::rectangle(img, cv::Point(box.x, box.y - 20), cv::Point(xmax, box.y), cv::Scalar(0, 255, 0), cv::FILLED);
+            
+            // Display class ID
             cv::putText(img, std::to_string(classId), cv::Point(box.x, box.y - 5), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(0, 0, 0));
+            
+            // Display detected character next to the bounding box
+            std::string char_text = std::string(1, detected_char);
+            cv::putText(img, char_text, cv::Point(box.x + box.width + 5, box.y + box.height/2), cv::FONT_HERSHEY_SIMPLEX, 1.0, cv::Scalar(0, 255, 255), 2);
         }
       
         auto end_time = std::chrono::high_resolution_clock::now();
