@@ -172,6 +172,8 @@ private:
         int mid_y = height / 2;
         bool start_read = false;
         
+        //detection sorting
+        //sort detection into 4 quadrants
         std::vector<Detection> q1, q2, q3, q4;
 
         for(const auto &detection : output) {
@@ -223,6 +225,29 @@ private:
             }
 
             if (start_read && classId != last_id) {
+              //checksum kuadran 1
+              // sum classid kuadran 1 == sum classid kuadran 2 + 3 + 4
+              if (q1.size() > 0 && q2.size() + q3.size() + q4.size() > 0) {
+                int sum_q1 = std::accumulate(q1.begin(), q1.end(), 0, [](int sum, const Detection& d) {
+                  return sum + d.class_id;
+                });
+                int sum_q234 = std::accumulate(q2.begin(), q2.end(), 0, [](int sum, const Detection& d) {
+                  return sum + d.class_id;
+                }) + std::accumulate(q3.begin(), q3.end(), 0, [](int sum, const Detection& d) {
+                  return sum + d.class_id;
+                }) + std::accumulate(q4.begin(), q4.end(), 0, [](int sum, const Detection& d) {
+                  return sum + d.class_id;
+                }); 
+
+              if (sum_q1 == sum_q234) {
+                RCLCPP_INFO(this->get_logger(), "Checksum valid");
+              } else {
+                RCLCPP_WARN(this->get_logger(), "Checksum invalid");
+              }
+              } else {
+                RCLCPP_WARN(this->get_logger(), "Not enough detections to validate checksum");
+              }
+
               password += detected_char;
               last_id = classId;
 
