@@ -170,6 +170,7 @@ private:
         int height = img.rows;
         int mid_x = width / 2;
         int mid_y = height / 2;
+        bool start_read = false;
         
         std::vector<Detection> q1, q2, q3, q4;
 
@@ -179,13 +180,13 @@ private:
             int cy = detection.box.y + detection.box.height / 2;
 
             if (cx >= mid_x && cy < mid_y) {
-                q1.push_back(detection); // Right-Top
+                q1.push_back(detection); // kuadran 1
             } else if (cx < mid_x && cy < mid_y) {
-                q2.push_back(detection); // Left-Top
+                q2.push_back(detection); // kuadran 2
             } else if (cx < mid_x && cy >= mid_y) {
-                q3.push_back(detection); // Bottom-Left
+                q3.push_back(detection); // kuadran 3
             } else if (cx >= mid_x && cy >= mid_y) {
-                q4.push_back(detection); // Bottom-Right
+                q4.push_back(detection); // kuadran 4
             }
         }
 
@@ -204,49 +205,33 @@ private:
             auto classId = detection.class_id;
             // auto confidence = detection.confidence;
 
-
             char detected_char;
 
             if(classId>=0 && classId<10)
-              detected_char = '0' + classId; // Class 0-9 maps to '0'-'9'
+              detected_char = '0' + classId; 
             else if(classId >= 10 && classId < 36)
-              detected_char = 'A' + (classId - 10); // Class 10-35 maps to 'A'-'Z'
+              detected_char = 'A' + (classId - 10); 
             else
-              detected_char = '?'; // Unknown class
+              detected_char = '?'; 
 
-            if (classId != last_id) {
+            if(!start_read) {
+              if (password.size() >= 4 && password.substr(password.size() - 4) == "0000") {
+                start_read = true;
+                RCLCPP_WARN(this->get_logger(), "START READING");
+              }
+            }
+
+            if (start_read && classId != last_id) {
               password += detected_char;
               last_id = classId;
 
-              // RCLCPP_INFO(this->get_logger(), "Password so far: %s", password.c_str());
-              RCLCPP_INFO(this->get_logger(), "Detected Class ID: %d, Character: %c", classId, detected_char);
+              RCLCPP_INFO(this->get_logger(), "PASS: %s", password.c_str());
+              RCLCPP_INFO(this->get_logger(), "Class ID: %d || CHAR: %c", classId, detected_char);
             }
 
-          //   if (classId != last_id) {
-          //     char detected_char;
-          
-          //     // Adjusted mapping logic
-          //     if (classId == 0) {
-          //         detected_char = '0'; // Class 0 maps to '0'
-          //     } else if (classId == 1) {
-          //         detected_char = 'A'; // Class 1 maps to 'A'
-          //     } else if (classId == 2) {
-          //         detected_char = 'B'; // Class 2 maps to 'B'
-          //     } else if (classId == 3) {
-          //         detected_char = '?'; // Class 3 maps to 'BUKAN', represented as '?'
-          //     } else {
-          //         detected_char = '?'; // Default for unknown classes
-          //     }
-          
-          //     password += detected_char;
-          //     last_id = classId;
-          
-          //     RCLCPP_INFO(this->get_logger(), "Password so far: %s", password.c_str());
-          // }
-
             if (output.empty()) {
-              last_id = -1; // Reset last_id if no detections
-              RCLCPP_INFO(this->get_logger(), "No detections found.");
+              last_id = -1; 
+              RCLCPP_ERROR(this->get_logger(), "No detections found.");
             }
       
             float rx = (float)img.cols / (float)(res.resized_image.cols - res.dw);
@@ -273,10 +258,10 @@ private:
             cv::rectangle(img, cv::Point(box.x, box.y), cv::Point(xmax, ymax), cv::Scalar(0, 255, 0), 3);
             cv::rectangle(img, cv::Point(box.x, box.y - 20), cv::Point(xmax, box.y), cv::Scalar(0, 255, 0), cv::FILLED);
             
-            // Display class ID
+            // display
             cv::putText(img, std::to_string(classId), cv::Point(box.x, box.y - 5), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(0, 0, 0));
             
-            // Display detected character next to the bounding box
+            // display detected character
             std::string char_text = std::string(1, detected_char);
             cv::putText(img, char_text, cv::Point(box.x + box.width + 5, box.y + box.height/2), cv::FONT_HERSHEY_SIMPLEX, 1.0, cv::Scalar(0, 255, 255), 2);
         }
@@ -285,14 +270,8 @@ private:
         chrono::duration<double> elapsed = end_time - start_time;
         fps = 1.0 / elapsed.count(); 
       
-        // RCLCPP_INFO(this->get_logger(), "FPS: %.2f", fps);
-        putText(img, "FPS:" + to_string(fps),cv::Point(10,30),cv::FONT_HERSHEY_SIMPLEX,1.0,cv::Scalar(0,0,0),2);
-      
-        // RCLCPP_INFO(this->get_logger(), "FPS: %f", fps);
-        // obj_pub->publish(this->info_obj);
-      
         imshow("Detection Result_2", img);
-        cv::waitKey(1); // Wajib untuk memproses event GUI OpenCV
+        cv::waitKey(1); 
 
         int key = cv::waitKey(1);
         if (key == 'q' || key == 'Q') {
@@ -300,7 +279,7 @@ private:
           if(outfile.is_open()) {
             outfile << password << std::endl;
             outfile.close();
-            RCLCPP_INFO(this->get_logger(), "Password saved to pass_result.txt: %s", password.c_str());
+            RCLCPP_INFO(this->get_logger(), "Password saved: %s", password.c_str());
           } else {
             RCLCPP_ERROR(this->get_logger(), "Failed to open pass_result.txt for writing.");           
           }
