@@ -19,7 +19,7 @@ using namespace std;
 
 const float SCORE_THRESHOLD = 0.2;
 const float NMS_THRESHOLD = 0.4;
-const float CONFIDENCE_THRESHOLD = 0.2;
+const float CONFIDENCE_THRESHOLD = 0.5;
 
 class ImageSubscriberNode : public rclcpp::Node {
 public:
@@ -215,6 +215,7 @@ private:
               detected_char = '?'; 
 
             if(!start_read) {
+               RCLCPP_WARN(this->get_logger(), "WAITING 0000");
               if (password.size() >= 4 && password.substr(password.size() - 4) == "0000") {
                 start_read = true;
                 RCLCPP_WARN(this->get_logger(), "START READING");

@@ -14,10 +14,13 @@ public:
   //open /dev/v4l/by-id
   Get_Frame():Node("Get_Frame"){
   cap_.open("/dev/v4l/by-id/usb-BC-231018-A_XWF_1080P_PC_Camera-video-index0", cv::CAP_V4L2);
+  RCLCPP_INFO(this->get_logger(), "initializing camera...");
     if(!cap_.isOpened()){
       cap_.open("/dev/v4l/by-id/usb-BC-231018-A_XWF_1080P_PC_Camera-video-index1", cv::CAP_V4L2);
+      RCLCPP_INFO(this->get_logger(), "trying to open index 1");
       if(!cap_.isOpened()){
         cap_.open("/dev/v4l/by-id/usb-Generic_HP_TrueVision_HD_Camera_0001-video-index0", cv::CAP_V4L2);
+        RCLCPP_INFO(this->get_logger(), "trying to open index 2");
         if(!cap_.isOpened()){
           RCLCPP_ERROR(this->get_logger(), "Error opening camera");
           rclcpp::shutdown();
